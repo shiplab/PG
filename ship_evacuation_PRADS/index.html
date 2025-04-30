@@ -1,92 +1,25 @@
-<html lang="en">
+<html>
 <head>
-  <meta charset="utf-8">  
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script type="importmap">
-    {
-      "imports": {"three": "./three.js-master/build/three.module.js",
-        "three/addons/": "./three.js-master/examples/jsm/"
-      }
-
-    }
-  </script>
-<title>Ship Evacuation</title>
+    <meta charset="utf-8" />
+    <title>Development of an Open-Source JavaScript Simulation Tool for Persons Movement Analysis</title>   
+    
 </head>
-  
+    <body>
+        <div id="main" style="width:800px;border:1px solid grey; padding:20px; font-family:Helvetica, sans-serif; margin: 0 auto;">
+        <h1 align="middle">Development of an Open-Source JavaScript Simulation Tool for Persons Movement Analysis</h1>
 
-    
-<body>
-  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-  <script src="https://cdn.plot.ly/plotly-2.25.2.min.js" charset="utf-8"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-  <div id="main" style="width:95%;border:1px solid grey; padding:20px; font-family:Helvetica, sans-serif; margin: 0 auto;">
-<h1>Ship Corridor Creator</h1> 
-<div>
-<div align="right">
-  <p style="width:90%" align="right"> <small>by Tomasz Hinz, Gdansk Tech, Henrique M. Gaspar, NTNU i Alesund and Jesus A. Rodriguez Perez, Datasky<br>v0.1, Dec 2024.</small></p>
-</div>
-<script type="module" src="src/script.js"></script>
-<p>Ship Evacuation is a tool to simulate the movement of persons in a ship corridor. The simulation is performed for a given number of persons. The simulation results are presented in the form of a 3D visualisation and 2D plot. The results can be saved to a CSV or JSON file.</p>
-</div>
-<p>Number of persons in simulation: <input title="nopersons" type="number" id="no_persons" value="2" min="1" max="50" onclick=""> </input></p>
+        <div style="position: relative; left: 0; top: 0;" align="right">
+            <p style="width:80%" align="right"> <small>v0.1, Apr. 2025 <br> Based on the paper published at PRADS, 2025, Ann Arbor, USA<br>by Tomasz Hinz<sup>1, 2</sup>, Karolina Bierkowska<sup>3</sup>, Henrique Gaspar<sup>3</sup>, and Grzegorz Mazerski<sup>2</sup>
+             <br>1 – Gdansk Tech, Gdansk, Poland 
+            <br>2 – Deltamarin sp. z o o, Gdansk, Poland
+            <br>3 – 3 NTNU, Alesund, Norway
+        </p>
+        </div>
 
-<script>let no_persons = document.getElementById("no_persons").value;
-let deck_configuration= "simple";
-  let no_compartments=5;
-  let compartments = [];
-  let compartmentsBB = [];
-</script>
-<div ID='IDresults'></div>
-<script>
-  const div = document.getElementById('IDresults');
-  for(let i =0; i<=no_persons-1; i++){
-      const para = document.createElement('div');
-      para.innerText += "Person "+(i+1)+" movment length: "
-      const divmovment = document.createElement('span');
-      divmovment.innerText="0"
-      divmovment.id="movment"+String(i+1)
-      para.appendChild(divmovment);
-      div.appendChild(para);
-  }   
-  </script>
-<p><button id="startSim" type="button">START</button>
-  <button id="plotFigure" type="button" disabled>Plot results!</button>
-  <button id="saveResultCSV" type="button" disabled>Save results to CSV!</button>
-  <button id="saveResultJSON" type="button" disabled>Save results to JSON!</button></p>
-  <script>
-      document.getElementById("plotFigure").disabled = true;
-      document.getElementById("saveResultCSV").disabled = true;
-      document.getElementById("saveResultJSON").disabled = true;
-      document.getElementById("startSim").disabled = false;
-  </script>
 
-<div class="radio-container">
-  <input type="radio" id="radio1" name="options" value="simple" checked>
-  <label for="radio1">Simple deck</label>
-  <input type="radio" id="radio2" name="options" value="test6">
-  <label for="radio2">L-shape deck - MSC.1/Circ.1533 Test 6: Rounding corners</label>
-  <input
-  type="radio"
-  id="radio3"
-  name="options"
-  value="json"
-  onclick="document.getElementById('geometryFileInput').click()"
-/>
-  <label for="radio3">Custom geometry (load from JSON file)</label>
-  <input
-  type="file"
-  id="geometryFileInput"
-  accept=".json"
-  style="display: none;"
-  onchange="loadGeometryFile(event)"
-/>
-</div>
+        <h2>Abstract</h2>
 
-<p><div id='movment2D' style="width:100%;border:1px solid rgb(0, 255, 0)"><!--Plotly will be drawn inside this DIV --></div></p>
-<p><div id='movment3D' style="width:100%;border:1px solid rgb(255, 0, 0)"><!--Three.js will be drawn inside this DIV --></div></p>
-<p><div id='envinformation' style="width:100%;border:1px solid rgb(255, 0, 255)">
-</div></p>
-</div>
-</body>    
-    
+        <p>Ship evacuation analysis is critical to maritime safety, directly influencing ship design and emergency preparedness across various vessel types. International maritime regulations, such as the International Convention for the Safety of Life at Sea (SOLAS), mandate stringent safety requirements for ships. For specialized vessels like Service Operation Vessels (SOVs) that support offshore industries, the Code of Safety for Special Purpose Ships (SPS Code) and the Code for the Carriage of Industrial Personnel (IP Code) provide additional guidelines to ensure the safety of industrial personnel on board. Academic research underscores the need for precise evacuation modelling to bolster safety protocols and ship design. However, current evacuation simulation tools are often hampered by significant drawbacks. These include exorbitant costs, proprietary constraints, and a lack of adaptability to the unique configurations of different ship types, such as SOVs and other vessels carrying industrial personnel. In many instances, these tools are overly complex and relatively slow, particularly in the initial stages of the Ship Design process. This paper introduces a novel, open-source JavaScript simulation program that models person movement scenarios across various vessel types. We are currently developing the program using Three.js for 3D visualization, aiming to provide an interactive real-time platform for users to observe personal movement processes. We focus on creating a flexible and customizable tool that can adapt to different ship layouts, particularly for SOVs and ships governed by the SPS and IP codes. This adaptability ensures that the tool can cater to your specific needs in ship design and safety protocols. We present case studies that illustrate the potential of the tool in ship layout evaluation. These studies demonstrate how the tool can be used to identify bottlenecks and enhance design layouts. The open-source nature of the program fosters collaboration within the maritime community, encouraging continuous improvement and future adoption.</p>
+        </div>
+    </body>
 </html>
